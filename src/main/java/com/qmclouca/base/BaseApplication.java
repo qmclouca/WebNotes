@@ -10,7 +10,8 @@ import org.springframework.context.annotation.Bean;
 		"com.qmclouca.base.repositories",
 		"com.qmclouca.base.controllers",
 		"com.qmclouca.base.services.Implementations",
-		"com.qmclouca.base.utils.JwtGenerator.Implementations"
+		"com.qmclouca.base.utils.JwtGenerator.Implementations",
+		"com.qmclouca.base.utils.JwtGenerator"
 })
 public class BaseApplication {
 	@Bean

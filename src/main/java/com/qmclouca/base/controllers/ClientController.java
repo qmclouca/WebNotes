@@ -3,7 +3,8 @@ package com.qmclouca.base.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qmclouca.base.Dtos.AddressDto;
-import com.qmclouca.base.utils.JwtGenerator.JwtGeneratorInterface;
+import com.qmclouca.base.Dtos.LoginDto;
+import com.qmclouca.base.utils.JwtGenerator.JwtTokenProvider;
 import jakarta.persistence.NoResultException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,16 +31,32 @@ public class ClientController {
 
     private final ClientService clientService;
 
-    private JwtGeneratorInterface jwtGenerator;
+    private JwtTokenProvider jwtGenerator;
 
     @Autowired
     private ObjectMapper objectMapper;
 
     @Autowired
-    public ClientController(ClientService clientService, JwtGeneratorInterface jwtGenerator){
+    public ClientController(ClientService clientService, JwtTokenProvider jwtGenerator){
         super();
         this.clientService = clientService;
         this.jwtGenerator = jwtGenerator;
+    }
+
+    @PostMapping("/loginByEmail")
+    public ResponseEntity<?> loginClientByEmail(@RequestBody LoginDto loginDto) {
+        try {
+            if(loginDto.getEmail() == null || loginDto.getPassword() == null) {
+                throw new NoResultException("Email or Password is Empty");
+            }
+            Optional<Client> clientData = clientService.getClientByEmailAndPassword(loginDto.getEmail(), loginDto.getPassword());
+            if(clientData.isEmpty()){
+                throw new NoResultException("Email or Password is Invalid");
+            }
+            return new ResponseEntity<>(jwtGenerator.generateToken(clientData.get()), HttpStatus.OK);
+        } catch (NoResultException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+        }
     }
 
     @PostMapping("/login")

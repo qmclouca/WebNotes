@@ -29,6 +29,19 @@ public class ClientRepositoryImplementation implements ClientRepository {
                 .getResultList();
     }
 
+    public Optional<Client> findByEmailAndPassword(String email, String password){
+        String query = "SELECT c FROM Client c WHERE c.email = :email AND c.password = :password";
+        TypedQuery<Client> typedQuery = entityManager.createQuery(query, Client.class)
+                .setParameter("email", email)
+                .setParameter("password", password);
+        try {
+            Client result = typedQuery.getSingleResult();
+            return Optional.of(result);
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
+    }
+
     public Optional<Client> getClientByName(String name){
         String query = "SELECT c FROM Client c WHERE LOWER(c.name) = LOWER(:name)";
 
