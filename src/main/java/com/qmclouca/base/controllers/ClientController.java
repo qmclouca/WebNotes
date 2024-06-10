@@ -3,13 +3,14 @@ package com.qmclouca.base.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qmclouca.base.Dtos.AddressDto;
-import com.qmclouca.base.utils.JwtGenerator.JwtGeneratorInterface;
-import jakarta.persistence.NoResultException;
+
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import java.util.List;
 import java.util.Optional;
+import ch.qos.logback.classic.Logger;
 import java.util.stream.Collectors;
 import com.qmclouca.base.Dtos.ClientDto;
 import com.qmclouca.base.models.Client;
@@ -25,37 +26,23 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/clients")
 public class ClientController {
 
+    public static Logger logger = (Logger) LoggerFactory.getLogger(ClientController.class);
+
     @Autowired
     private ModelMapper modelMapper;
 
     private final ClientService clientService;
 
-    private JwtGeneratorInterface jwtGenerator;
+
 
     @Autowired
     private ObjectMapper objectMapper;
 
     @Autowired
-    public ClientController(ClientService clientService, JwtGeneratorInterface jwtGenerator){
+    public ClientController(ClientService clientService){
         super();
         this.clientService = clientService;
-        this.jwtGenerator = jwtGenerator;
-    }
 
-    @PostMapping("/login")
-    public ResponseEntity<?> loginClient(@RequestBody Client client) {
-        try {
-            if(client.getClientName() == null || client.getPassword() == null) {
-                throw new NoResultException("UserName or Password is Empty");
-            }
-            Optional<Client> clientData = clientService.getClientByNameAndPassword(client.getClientName(), client.getPassword());
-            if(clientData.isEmpty()){
-                throw new NoResultException("UserName or Password is Invalid");
-            }
-            return new ResponseEntity<>(jwtGenerator.generateToken(client), HttpStatus.OK);
-        } catch (NoResultException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
-        }
     }
 
     @PostMapping

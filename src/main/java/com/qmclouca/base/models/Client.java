@@ -2,12 +2,14 @@ package com.qmclouca.base.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Data
 @Entity
+@EqualsAndHashCode(callSuper=true)
 public class Client extends BaseEntity{
 
     @Column

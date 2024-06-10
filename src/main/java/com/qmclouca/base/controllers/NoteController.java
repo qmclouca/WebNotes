@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qmclouca.base.Dtos.NoteDto;
 import com.qmclouca.base.models.Note;
 import com.qmclouca.base.services.NoteService;
+import lombok.EqualsAndHashCode;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
