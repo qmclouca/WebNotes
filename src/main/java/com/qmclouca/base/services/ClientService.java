@@ -15,5 +15,5 @@ public interface ClientService {
     Optional<Client> getClientByName(String name);
     Client saveClient(Client client);
     Optional<Client> getClientByNameAndPassword(String name, String password) throws NoResultException;
-
+    Optional<Client> getClientByEmailAndPassword(String email, String password);
 }

@@ -64,4 +64,7 @@ public class ClientServiceImplementation implements ClientService {
         }
         return client;
     }
+    public Optional<Client> getClientByEmailAndPassword(String email, String password) {
+        return clientRepository.findByEmailAndPassword(email, password);
+    }
 }
