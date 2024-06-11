@@ -15,10 +15,10 @@ public class BaseEntity {
     private Long id;
 
     @GeneratedValue (strategy = GenerationType.AUTO)
-    @Column(updatable = false, nullable = false)
+    @Column(updatable = false, nullable = false, name="CREATED_AT")
     private LocalDateTime createdAt;
 
-    @Column
+    @Column(name="MODIFIED_AT")
     private LocalDateTime modifiedAt;
 
     @PrePersist

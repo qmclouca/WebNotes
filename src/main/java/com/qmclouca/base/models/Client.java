@@ -12,13 +12,13 @@ import java.util.List;
 @EqualsAndHashCode(callSuper=true)
 public class Client extends BaseEntity{
 
-    @Column
+    @Column(unique = true, name = "CLIENT_NAME")
     private String clientName;
     @Column
     private String password;
     @Column
     private String name;
-    @Column
+    @Column(name="BIRTH_DATE")
     private LocalDate birthDate;
     @Column
     private String mobile;

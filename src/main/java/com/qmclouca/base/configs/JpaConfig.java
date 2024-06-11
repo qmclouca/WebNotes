@@ -1,24 +1,27 @@
 package com.qmclouca.base.configs;
 
-import jakarta.persistence.spi.PersistenceProviderResolverHolder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.spi.PersistenceProvider;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
 import javax.sql.DataSource;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.spi.PersistenceProvider;
+import jakarta.persistence.spi.PersistenceProviderResolverHolder;
 
 @Configuration
-@EnableJpaRepositories("com.qmclouca.base.repositories")
+@EnableJpaRepositories(basePackages = "com.qmclouca.base.repositories")
 public class JpaConfig {
-    @Bean (name = "entityManagerFactory")
-    public EntityManagerFactory entityManagerFactoryBean(DataSource dataSource){
+
+    @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
         em.setPackagesToScan("com.qmclouca.base.models");
+        em.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
 
         PersistenceProvider persistenceProvider = PersistenceProviderResolverHolder
                 .getPersistenceProviderResolver()
@@ -28,6 +31,13 @@ public class JpaConfig {
                 .orElseThrow(() -> new RuntimeException("No persistence providers found."));
 
         em.setPersistenceProvider(persistenceProvider);
-        return em.getObject();
+        em.afterPropertiesSet(); // Adicionado para garantir que as propriedades sejam configuradas
+
+        return em;
+    }
+
+    @Bean
+    public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+        return new JpaTransactionManager(entityManagerFactory);
     }
 }

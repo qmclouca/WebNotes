@@ -3,9 +3,11 @@ package com.qmclouca.base.models;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
+@EqualsAndHashCode(callSuper=true)
 public class Address extends BaseEntity {
     @Column
     private String street;
@@ -13,7 +15,7 @@ public class Address extends BaseEntity {
     private String city;
     @Column
     private String state;
-    @Column
+    @Column(name="POSTAL_CODE")
     private String postalCode;
     @Column
     private String number;

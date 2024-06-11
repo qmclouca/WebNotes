@@ -14,6 +14,6 @@ public interface ClientService {
     boolean deleteClient(Long id);
     Optional<Client> getClientByName(String name);
     Client saveClient(Client client);
-    Optional<Client> getClientByNameAndPassword(String name, String password) throws NoResultException;
+    Client getClientByNameAndPassword(String name, String password) throws NoResultException;
 
 }

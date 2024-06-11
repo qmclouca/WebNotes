@@ -10,12 +10,12 @@ import org.springframework.context.annotation.Bean;
 		"com.qmclouca.base.repositories",
 		"com.qmclouca.base.controllers",
 		"com.qmclouca.base.services.Implementations",
-		"com.qmclouca.base.utils.JwtGenerator.Implementations"
+		"com.qmclouca.base.repositories",
+		"com.qmclouca.base.repositories.Implementations",
+		"com.qmclouca.base.utils.Auth",
+		"com.qmclouca.base.configs",
 })
 public class BaseApplication {
-	@Bean
-	public ModelMapper modelMapper() { return new ModelMapper(); }
-
 	public static void main(String[] args) {
 		SpringApplication.run(BaseApplication.class, args);
 	}
