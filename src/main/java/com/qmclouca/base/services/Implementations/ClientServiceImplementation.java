@@ -79,4 +79,7 @@ public class ClientServiceImplementation implements ClientService {
             throw new NoResultException("Nome de usuário ou senha incorreta.");
         }
     }
+    public Optional<Client> getClientByEmailAndPassword(String email, String password) {
+        return clientRepository.findByEmailAndPassword(email, password);
+    }
 }
