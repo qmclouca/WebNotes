@@ -3,11 +3,14 @@ package com.qmclouca.base.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qmclouca.base.Dtos.AddressDto;
+
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import java.util.List;
 import java.util.Optional;
+import ch.qos.logback.classic.Logger;
 import java.util.stream.Collectors;
 import com.qmclouca.base.Dtos.ClientDto;
 import com.qmclouca.base.models.Client;
@@ -23,6 +26,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/clients")
 public class ClientController {
 
+    public static Logger logger = (Logger) LoggerFactory.getLogger(ClientController.class);
+
     @Autowired
     private ModelMapper modelMapper;
 
@@ -35,6 +40,7 @@ public class ClientController {
     public ClientController(ClientService clientService){
         super();
         this.clientService = clientService;
+
     }
 
     @PostMapping

@@ -1,18 +1,10 @@
 package com.qmclouca.base.Dtos;
 
-import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-public class AuthenticationResponse implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-    private final String jwt;
-
-    public AuthenticationResponse(String jwt) {
-        this.jwt = jwt;
-    }
-
-    public String getJwt() {
-        return jwt;
-    }
+@Data
+@AllArgsConstructor
+public class AuthenticationResponse {
+    private String jwt;
 }
