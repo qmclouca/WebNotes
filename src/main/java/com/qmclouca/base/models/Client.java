@@ -26,6 +26,6 @@ public class Client extends BaseEntity{
     private String email;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "client_id")
+    @JoinColumn(name = "CLIENT_ID")
     private List<Address> address;
 }

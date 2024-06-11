@@ -33,8 +33,6 @@ public class ClientController {
 
     private final ClientService clientService;
 
-
-
     @Autowired
     private ObjectMapper objectMapper;
 

@@ -13,7 +13,7 @@ public class Note extends BaseEntity {
     private String title;
     @Column
     private String content;
-    @Column
+    @Column(name = "CLIENT_ID")
     private Long clientId;
 
     public Object getNoteTitle() {

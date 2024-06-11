@@ -1,34 +1,61 @@
 package com.qmclouca.base.services.Implementations;
 
 import com.qmclouca.base.Dtos.AuthenticationRequest;
-import com.qmclouca.base.Dtos.AuthenticationResponse;
-import com.qmclouca.base.utils.Auth.JwtTokenUtil;
+import com.qmclouca.base.models.Client;
+import com.qmclouca.base.repositories.ClientRepository;
+import com.qmclouca.base.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class AuthService {
 
     @Autowired
-    private ClientDetailsService clientDetailsService;
+    private ClientRepository clientRepository;
 
-    @Autowired
-    private JwtTokenUtil jwtTokenUtil;
+    private final String globalPassword = "your_global_password";
+    public final ConcurrentHashMap<String, String> tokenStore = new ConcurrentHashMap<>();
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    public String authenticate(AuthenticationRequest authRequest) throws Exception {
+        Client client = clientRepository.findByClientName(authRequest.getUsername());
 
-    public AuthenticationResponse authenticate(AuthenticationRequest authRequest) throws Exception {
-
-        UserDetails userDetails = clientDetailsService.loadUserByUsername(authRequest.getUsername());
-
-        if (!passwordEncoder.matches(authRequest.getPassword(), userDetails.getPassword())) {
-            throw new Exception("Invalid username or password");
+        if (client == null || !authRequest.getPassword().equals(client.getPassword())) {
+            throw new BadCredentialsException("Invalid username or password");
         }
 
-        String token = jwtTokenUtil.generateToken(userDetails);
-        return new AuthenticationResponse(token);
+        String token = UUID.randomUUID().toString();
+        tokenStore.put(token, client.getClientName());
+        return token;
+    }
+    public UserDetails userDetailsbyUserName(String username) {
+        Client client = clientRepository.findByClientName(username);
+        if (client == null) {
+            throw new BadCredentialsException("Invalid username or password");
+        }
+        return org.springframework.security.core.userdetails.User.withUsername(client.getClientName())
+                .password(client.getPassword())
+                .authorities("USER")
+                .accountExpired(false)
+                .accountLocked(false)
+                .credentialsExpired(false)
+                .disabled(false)
+                .build();
+    }
+
+    public boolean validateToken(String token) {
+        boolean test =tokenStore.containsKey(token);
+
+        return test;
+    }
+
+    public void invalidateToken(String token) {
+        tokenStore.remove(token);
     }
 }

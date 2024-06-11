@@ -10,23 +10,22 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class ClientServiceImplementation implements ClientService {
 
     private final ClientRepository clientRepository;
-    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public ClientServiceImplementation(ClientRepository clientRepository, PasswordEncoder passwordEncoder) {
+    public ClientServiceImplementation(ClientRepository clientRepository) {
         this.clientRepository = clientRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public Client createClient(Client client) {
-        client.setPassword(passwordEncoder.encode(client.getPassword()));
+        client.setPassword(client.getPassword());
         return clientRepository.save(client);
     }
 
@@ -67,16 +66,14 @@ public class ClientServiceImplementation implements ClientService {
         }
     }
 
-    @Override
     public Client saveClient(Client client) {
-        client.setPassword(passwordEncoder.encode(client.getPassword()));
         return clientRepository.save(client);
     }
 
     @Override
     public Client getClientByNameAndPassword(String name, String password) throws NoResultException {
         Client client = clientRepository.findByClientName(name);
-        if (passwordEncoder.matches(password, client.getPassword())) {
+        if (Objects.equals(password, client.getPassword())) {
             return client;
         } else {
             throw new NoResultException("Nome de usuário ou senha incorreta.");
